@@ -41,6 +41,24 @@ describe Chef::Knife::Bootstrap::ClientBuilder do
     client_builder
   }
 
+  context "#run" do
+    let(:client) { Chef::ApiClient.new }
+    let(:node) { Chef::Node.new }
+
+    before do
+      # mock out the rest of #run
+      expect(client_builder).to receive(:sanity_check)
+      expect(client_builder).to receive(:create_client!).and_return(client)
+      expect(client_builder).to receive(:create_node!).and_return(node)
+    end
+
+    it "returns the created client and nodeeturns " do
+      result = client_builder.run
+      expect(result[:node]).to eq(node)
+      expect(result[:client]).to eq(client)
+    end
+  end
+
   context "#sanity_check!" do
     let(:response_404) { OpenStruct.new(:code => '404') }
     let(:exception_404) { Net::HTTPServerException.new("404 not found", response_404) }

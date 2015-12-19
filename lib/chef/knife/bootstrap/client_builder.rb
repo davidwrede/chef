@@ -46,16 +46,23 @@ class Chef
 
         # Main entry.  Prompt the user to clean up any old client or node objects.  Then create
         # the new client, then create the new node.
+        #
+        # @return [Hash] Hash of Chef::Node and Chef::ApiClient
         def run
           sanity_check
 
           ui.info("Creating new client for #{node_name}")
 
-          create_client!
+          client = create_client!
 
           ui.info("Creating new node for #{node_name}")
 
-          create_node!
+          node = create_node!
+
+          {
+            client: client,
+            node: node
+          }
         end
 
         # Tempfile to use to write newly created client credentials to.

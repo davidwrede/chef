@@ -375,9 +375,7 @@ class Chef
             exit 1
           end
 
-          client_builder.run
-
-          chef_vault_handler.run(node_name: config[:chef_node_name])
+          chef_vault_handler.run(client_builder.run[:client])
 
           bootstrap_context.client_pem = client_builder.client_path
         else
